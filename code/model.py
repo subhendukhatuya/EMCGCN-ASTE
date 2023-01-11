@@ -148,8 +148,10 @@ class EMCGCN(torch.nn.Module):
                 GraphConvLayer(args.device, args.gcn_dim, 5*args.class_num, args.class_num, args.pooling))
 
     def forward(self, tokens, masks, word_pair_position, word_pair_deprel, word_pair_pos, word_pair_synpost):
-        bert_feature, _ = self.bert(tokens, masks)
-        bert_feature = self.dropout_output(bert_feature) 
+        #bert_feature = self.tokenizer(tokens, masks)
+        bert_feature = self.bert(tokens, masks)
+       # print('bert feature', bert_feature)
+        bert_feature = self.dropout_output(bert_feature.last_hidden_state) 
 
         batch, seq = masks.shape
         tensor_masks = masks.unsqueeze(1).expand(batch, seq, seq).unsqueeze(-1)
